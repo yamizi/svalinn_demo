@@ -1,4 +1,7 @@
 import axios from "axios";
+import { getStorage } from "firebase/storage";
+
+
 
 const bucket_name = "svalinn-partnership-demo.appspot.com"
 const gs_url = `https://firebasestorage.googleapis.com/v0/b/${bucket_name}/o`
@@ -15,7 +18,7 @@ const uploadFile = (image:any,name:string) :Promise<any> => {
     return axios.post(`${gs_url}?${upload_operation}&name=${name}`,formData)
 }
 
-export const handleUpload = (file_name:string,image:any) => {  
+export const handleUpload = (file_name:string,image:any, callback:any) => {
   /* 
   Function handles upload requests for files to the Google Cloud Storage bucket
 
@@ -30,6 +33,9 @@ export const handleUpload = (file_name:string,image:any) => {
         const downloadToken = response.data.downloadTokens
         const url = `${gs_url}/${file_name}?alt=media&token=${downloadToken}`                
         console.log("Upload ok : "+url)
+      if (callback){
+        callback(url)
+      }
     }).catch(reject => {
         console.error(reject)
     })
@@ -84,7 +90,7 @@ export function handleDownload(file_name:string, adv_example:boolean=true) {
   let image;
   return (async () => {
     //check file existence and await response for download token
-    const check = await _file_check(file_name); 
+    const check = await _file_check(file_name);
     //return (`${gs_url}/${file_name}`);
     if (check.code == 200) {
       const url = `${gs_url}/${file_name}?alt=media&token=${check.token}`;
@@ -105,4 +111,3 @@ export function handleDownload(file_name:string, adv_example:boolean=true) {
     }
   })();
 };
- 
