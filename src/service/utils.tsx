@@ -76,11 +76,11 @@ export function handleDisconnect (socket: Socket<DefaultEventsMap, DefaultEvents
 };
 
 
-export function handleOperationReturn (imgId:string, socket: Socket<DefaultEventsMap, DefaultEventsMap>, deepfake:any, setDeepfake: (arg0: any[]) => void,operation:string|undefined,params:Record<string, string>){
+export function handleBackEndOperation (operation:string,params:Record<string, string>, imgId:string, socket: Socket<DefaultEventsMap, DefaultEventsMap>, setCallback: (arg0: any[]) => void){
     const newRequest:RequestType = {} as RequestType
 
     newRequest.operation_parameters = params
-    newRequest.operation= operation as string
+    newRequest.operation= operation
     // these are never used in the backend, there we only use file_id which is in the parameters
     newRequest.image_id=imgId   //Need this so that different requests are different from each other, otherwise useless
 
@@ -97,7 +97,7 @@ export function handleOperationReturn (imgId:string, socket: Socket<DefaultEvent
                     // We generate 4 deepfakes to display them in the frontend
                     // @ts-ignore
                       let response_download = await handleDownload(response[i]["image_id"]);
-                    setDeepfake([...deepfake, response_download?.data]);
+                    setCallback([response_download?.data]);
                   }
                 })();
               };

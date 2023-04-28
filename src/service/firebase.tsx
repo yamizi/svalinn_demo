@@ -34,7 +34,7 @@ export const handleUpload = (file_name:string,image:any, callback:any) => {
         const url = `${gs_url}/${file_name}?alt=media&token=${downloadToken}`                
         console.log("Upload ok : "+url)
       if (callback){
-        callback(url)
+        callback(url, file_name)
       }
     }).catch(reject => {
         console.error(reject)

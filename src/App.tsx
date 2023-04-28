@@ -12,8 +12,8 @@ import PersonPinIcon from '@mui/icons-material/PersonPin';
 import CameraCapture from './components/CameraCapture'
 import DeepFakeCarousel from "./components/DeepFakeCarousel";
 import {Socket} from "socket.io-client";
-import {handleConnect} from "./service/utils";
-
+import {handleConnect, handleBackEndOperation} from "./service/utils";
+import {DefaultEventsMap} from "@socket.io/component-emitter";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -50,14 +50,19 @@ function App() {
 
     const [connected, setConnected] = React.useState<boolean>(false);
    const [serverMessage, setServerMessage ] = React.useState<string>('');
-   const [socket,setSocket] = React.useState<Socket|undefined>(undefined);
+   const [socket,setSocket] = React.useState<Socket<DefaultEventsMap, DefaultEventsMap>>();
+   const [deepfake, setDeepfake] = React.useState([]);
 
     if (!connected){
         handleConnect(setServerMessage, setConnected, setSocket);
     }
 
-  const setCamera = (event: React.SyntheticEvent, newValue: string) => {
-    setCameraItem(newValue);
+  const setCamera = (event: React.SyntheticEvent, urlValue: string, filename: string) => {
+    setCameraItem(urlValue);
+    const operation ="deepfake";
+    const params = {"attack_name":"stable_diffusion_inpainting","file_id":filename};
+    // @ts-ignore
+      handleBackEndOperation(operation, params, filename, socket, setDeepfake)
   };
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
