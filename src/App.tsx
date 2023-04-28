@@ -11,6 +11,8 @@ import GppGoodIcon from '@mui/icons-material/GppGood';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import CameraCapture from './components/CameraCapture'
 import DeepFakeCarousel from "./components/DeepFakeCarousel";
+import {Socket} from "socket.io-client";
+import {handleConnect} from "./service/utils";
 
 
 interface TabPanelProps {
@@ -46,6 +48,17 @@ function App() {
     const [value, setValue] = React.useState(0);
     const [cameraItem, setCameraItem] = React.useState('');
 
+    const [connected, setConnected] = React.useState<boolean>(false);
+   const [serverMessage, setServerMessage ] = React.useState<string>('');
+   const [socket,setSocket] = React.useState<Socket|undefined>(undefined);
+
+    if (!connected){
+        handleConnect(setServerMessage, setConnected, setSocket);
+    }
+
+  const setCamera = (event: React.SyntheticEvent, newValue: string) => {
+    setCameraItem(newValue);
+  };
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -63,7 +76,7 @@ function App() {
       </Tabs>
 
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <CameraCapture setCameraItem={setCameraItem}/>
+          <CameraCapture setCamera={setCamera}/>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
             <div
