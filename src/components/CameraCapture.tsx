@@ -27,10 +27,10 @@ const CameraCapture = ({setCamera}) => {
         setFormAccept(event.target.checked);
       };
 
-  const capture = React.useCallback(() => {
+  const capture = React.useCallback((name:string) => {
     // @ts-ignore
       const pictureSrc = webcamRef.current.getScreenshot()
-      const pictureName = email+"_"+genUniqueId()+".png"
+      const pictureName = name+"_"+genUniqueId()+".png"
       //console.log(pictureSrc)
 
       urltoFile(pictureSrc, pictureName,'image/png')
@@ -103,7 +103,7 @@ const CameraCapture = ({setCamera}) => {
                 <Button variant="contained"
                     onClick={(e) => {
                       e.preventDefault()
-                      capture()
+                      capture(email)
                     }}
                     className="btn btn-danger"
                         disabled={!formAccept || email.length<5}

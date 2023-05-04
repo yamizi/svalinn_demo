@@ -14,6 +14,7 @@ import DeepFakeCarousel from "./components/DeepFakeCarousel";
 import {Socket} from "socket.io-client";
 import {handleConnect, handleBackEndOperation} from "./service/utils";
 import {DefaultEventsMap} from "@socket.io/component-emitter";
+import ImmunizedTab from "./components/ImmunizedTab";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -58,7 +59,7 @@ function App() {
     }
 
   const setCamera = (event: React.SyntheticEvent, urlValue: string, filename: string) => {
-    setCameraItem(urlValue);
+    setCameraItem("https://firebasestorage.googleapis.com/v0/b/svalinn-partnership-demo.appspot.com/o/"+urlValue+"?alt=media");
     const operation ="deepfake";
     const params = {"attack_name":"stable_diffusion_inpainting","file_id":filename};
     // @ts-ignore
@@ -97,7 +98,7 @@ function App() {
 
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          <p>{cameraItem}</p>
+<ImmunizedTab cameraItem={cameraItem}/>
         </TabPanel>
     </div>
   );

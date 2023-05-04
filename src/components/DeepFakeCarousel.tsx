@@ -18,23 +18,23 @@ const steps = [
       cameraItem,
   },
     {
-    label: 'You have been seen at the Casino!',
+    label: 'You are addicted to gambling!',
     description:
-      'https://firebasestorage.googleapis.com/v0/b/svalinn-partnership-demo.appspot.com/o/photo_adv_seed13.png?alt=media&token=c986c877-c6f1-4a0f-8976-b1b413a29416',
+      cameraItem.replace(".png","_gambling.png"),
   },
- {
+ /*{
     label: 'You have been seen at the Red District in Amsterdam!',
     description:
       'https://firebasestorage.googleapis.com/v0/b/svalinn-partnership-demo.appspot.com/o/photo_adv_seed13.png?alt=media&token=c986c877-c6f1-4a0f-8976-b1b413a29416',
-  },
+  },*/
     {
-    label: 'There is a photo of you handcuffed!',
-    description: `https://firebasestorage.googleapis.com/v0/b/svalinn-partnership-demo.appspot.com/o/photo_adv_seed13.png?alt=media&token=c986c877-c6f1-4a0f-8976-b1b413a29416`,
+    label: 'You have been arrested!',
+    description: cameraItem.replace(".png","_arrest.png"),
   },
 
   {
-    label: 'You have been seen drug trafficking!',
-    description: `https://firebasestorage.googleapis.com/v0/b/svalinn-partnership-demo.appspot.com/o/photo_adv_seed13.png?alt=media&token=c986c877-c6f1-4a0f-8976-b1b413a29416`,
+    label: 'You are drug trafficking!',
+    description: cameraItem.replace(".png","_drug.png"),
   },
 ];
 
