@@ -2,7 +2,10 @@ import React, { useState } from 'react'
 import Webcam from 'react-webcam'
 import Button from '@mui/material/Button';
 
-import {handleConnect} from "../service/utils";
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import TextField from '@mui/material/TextField';
 
 import {handleUpload} from '../service/firebase'
 import {genUniqueId, urltoFile} from "../service/utils";
@@ -14,15 +17,20 @@ const videoConstraints = {
 }
 // @ts-ignore
 const CameraCapture = ({setCamera}) => {
-  const [picture, setPicture] = useState('')
-
+  const [picture, setPicture] = useState('');
+  const [email, setEmail] = useState('');
+  const [formAccept, setFormAccept] = useState(false)
 
   const webcamRef = React.useRef(null)
+
+    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFormAccept(event.target.checked);
+      };
 
   const capture = React.useCallback(() => {
     // @ts-ignore
       const pictureSrc = webcamRef.current.getScreenshot()
-      const pictureName = genUniqueId()+".png"
+      const pictureName = email+"_"+genUniqueId()+".png"
       //console.log(pictureSrc)
 
       urltoFile(pictureSrc, pictureName,'image/png')
@@ -83,15 +91,28 @@ const CameraCapture = ({setCamera}) => {
             Retake
           </Button>
         ) : (
-          <Button variant="contained"
-            onClick={(e) => {
-              e.preventDefault()
-              capture()
-            }}
-            className="btn btn-danger"
-          >
-            Capture
-          </Button>
+
+            <FormGroup>
+
+              <FormControlLabel required control={<Checkbox checked={formAccept} onChange={handleCheckboxChange} />} label="I agree to the Data Processing Policy" />
+                <TextField id="standard-basic" label="Email" value={email}
+  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  }} variant="standard" />
+
+                <Button variant="contained"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      capture()
+                    }}
+                    className="btn btn-danger"
+                        disabled={!formAccept || email.length<5}
+                  >
+                    Capture
+                  </Button>
+            </FormGroup>
+
+
         )}
       </div>
     </div>
