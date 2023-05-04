@@ -8,7 +8,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 
 import {handleUpload} from '../service/firebase'
-import {genUniqueId, urltoFile} from "../service/utils";
+import {genUniqueId, urltoFile, launchDeepFake} from "../service/utils";
 //const WebcamComponent = () => <Webcam />
 const videoConstraints = {
   width: 512,
@@ -36,30 +36,13 @@ const CameraCapture = ({setCamera}) => {
       urltoFile(pictureSrc, pictureName,'image/png')
     .then(function(file){ handleUpload(pictureName,file, setCamera);});
 
-    const scale = 7.5
-    const num_steps = 10
-    const seed = 20
-    const prompt = "A man playing football"
-    const immunize = false
-    /*fetch("https://sghamizi-photoguard.hf.space/run/submit", {
-	method: "POST",
-	headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            data: [
-                pictureSrc,
-                prompt,
-                seed,
-                scale,
-                seed,
-                immunize,
-            ]
-        })
-    }).then(function(response){console.log(response); })
-*/
-
+      launchDeepFake(pictureName,onDeepFakeReady )
       setPicture(pictureSrc)
   }, []);
 
+    const onDeepFakeReady = (data:any) => {
+        console.log("deepfake ready", data)
+    }
 
   return (
     <div>
@@ -72,9 +55,9 @@ const CameraCapture = ({setCamera}) => {
             audio={false}
             height={512}
             ref={webcamRef}
-            width={512}
+            //width={512}
             screenshotFormat="image/png"
-            videoConstraints={videoConstraints}
+            //videoConstraints={videoConstraints}
           />
         ) : (
           <img src={picture} />

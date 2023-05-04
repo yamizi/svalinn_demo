@@ -2,6 +2,8 @@ import { DefaultEventsMap } from '@socket.io/component-emitter';
 import io, {Socket} from 'socket.io-client';
 import {RequestType} from "../types/request.type";
 
+const backend:string = " http://localhost:5001/"//"http://10.186.114.36:5001/"
+
 export function genUniqueId(): string {
     const dateStr = Date
         .now()
@@ -106,4 +108,24 @@ export function handleBackEndOperation (operation:string,params:Record<string, s
     })
     // console.log(JSON.stringify(newRequest))
     // console.log(`Operation definition : ops[${operation}] with parameters ${JSON.stringify(params)}`)
+  }
+
+
+  function postBackEnd(operation:string, params:Record<string, string>, setCallback: (arg0: Promise<any>) => void){
+    fetch(backend+"/request/new", {
+	method: "POST",
+	headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({"operation":operation, "operation_parameters":params})
+    }).then(function(response){
+        console.log(response);
+        setCallback(response.json());
+    })
+  }
+
+  export async function launchDeepFake(file_id:string, setCallback: (arg0: Promise<any>) => void){
+    postBackEnd("deepfake", {"file_id":file_id,"attack_name":"gambling"}, setCallback)
+    await new Promise(r => setTimeout(r, 150*1000));
+    postBackEnd("deepfake", {"file_id":file_id,"attack_name":"arrest"}, setCallback)
+    await new Promise(r => setTimeout(r, 150*1000));
+    postBackEnd("deepfake", {"file_id":file_id,"attack_name":"drug"}, setCallback)
   }
