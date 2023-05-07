@@ -45,26 +45,29 @@ function TabPanel(props: TabPanelProps) {
 
 
 function App() {
-    const theme = useTheme();
-    const [value, setValue] = React.useState(0);
-    const [cameraItem, setCameraItem] = React.useState('');
+  const theme = useTheme();
+  const [value, setValue] = React.useState(0);
+  const [cameraItem, setCameraItem] = React.useState('');
+  const [connected, setConnected] = React.useState<boolean>(false);
+  const [serverMessage, setServerMessage ] = React.useState<string>('');
+  const [socket,setSocket] = React.useState<Socket<DefaultEventsMap, DefaultEventsMap>>();
+  const [deepfake, setDeepfake] = React.useState([]); // TODO: Not sure what this does. Is used for callback on handleOperationBackend. What is callback?
+  const [immunized, setImmunized] = React.useState([]); // TODO: Smae here 
+  const [immunizationDone, setImmunizationDone] = React.useState(false);
+  const [deepfakeDone, setDeepfakeDone] = React.useState(false);
 
-    const [connected, setConnected] = React.useState<boolean>(false);
-   const [serverMessage, setServerMessage ] = React.useState<string>('');
-   const [socket,setSocket] = React.useState<Socket<DefaultEventsMap, DefaultEventsMap>>();
-   const [deepfake, setDeepfake] = React.useState([]);
-
-    if (!connected){
-        handleConnect(setServerMessage, setConnected, setSocket);
-    }
+  if (!connected){
+      handleConnect(setServerMessage, setConnected, setSocket);
+  }
 
   const setCamera = (event: React.SyntheticEvent, urlValue: string, filename: string) => {
     setCameraItem("https://firebasestorage.googleapis.com/v0/b/svalinn-partnership-demo.appspot.com/o/"+urlValue+"?alt=media");
     const operation ="deepfake";
-    const params = {"attack_name":"stable_diffusion_inpainting","file_id":filename};
+    const params = {"attack_name":"stable_diffusion_inpainting","file_id":urlValue};
     // @ts-ignore
-      handleBackEndOperation(operation, params, filename, socket, setDeepfake)
+      handleBackEndOperation(operation, params, urlValue, socket, setDeepfake, setDeepfakeDone, setImmunizationDone)
   };
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -98,7 +101,7 @@ function App() {
 
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-<ImmunizedTab cameraItem={cameraItem}/>
+<ImmunizedTab cameraItem={cameraItem} socket={socket} setImmunized={setImmunized} immunizationDone = {immunizationDone} setImmunizationDone={setImmunizationDone} setDeepfakeDone={setDeepfakeDone}/>
         </TabPanel>
     </div>
   );
