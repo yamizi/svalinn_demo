@@ -56,9 +56,11 @@ function App() {
   const [immunized, setImmunized] = React.useState([]); // TODO: Smae here 
   const [immunizationDone, setImmunizationDone] = React.useState(false);
   const [deepfakeDone, setDeepfakeDone] = React.useState(false);
+  const [serverConnections, setServerConnections ] = React.useState<number>(0);
 
-  if (!connected){
-      handleConnect(setServerMessage, setConnected, setSocket);
+  if (serverConnections<1){
+     setServerConnections(serverConnections+1)
+     handleConnect(setServerMessage, setConnected, setSocket);
   }
 
   const setCamera = (event: React.SyntheticEvent, urlValue: string, filename: string) => {
