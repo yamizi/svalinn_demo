@@ -36,7 +36,7 @@ const CameraCapture = ({setCamera}) => {
       urltoFile(pictureSrc, pictureName,'image/png')
     .then(function(file){ handleUpload(pictureName,file, setCamera);});
 
-      launchDeepFake(pictureName,onDeepFakeReady )
+      //launchDeepFake(pictureName,onDeepFakeReady )
       setPicture(pictureSrc)
   }, []);
 
