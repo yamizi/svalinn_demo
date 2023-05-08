@@ -16,7 +16,6 @@ import {Socket} from "socket.io-client";
 import {handleConnect, handleBackEndOperation} from "./service/utils";
 import {DefaultEventsMap} from "@socket.io/component-emitter";
 import ImmunizedTab from "./components/ImmunizedTab";
-import CircularProgress from '@mui/material/CircularProgress';
 
 interface TabPanelProps {
   children?: React.ReactNode;
