@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import GppGoodIcon from '@mui/icons-material/GppGood';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
+import CircularProgress from '@mui/material/CircularProgress';
 import CameraCapture from './components/CameraCapture'
 import DeepFakeCarousel from "./components/DeepFakeCarousel";
 import {Socket} from "socket.io-client";
@@ -80,7 +81,12 @@ function App() {
 
       <Tabs value={value} onChange={handleChange} variant="fullWidth" aria-label="icon label tabs example">
         <Tab icon={<PhotoCameraIcon />} label="CAPTURE" />
-        <Tab icon={<PersonPinIcon />} label="DEEPFAKE" />
+        <Tab icon={<div>
+          {(!cameraItem || (cameraItem && deepfakeDone)) &&
+        <PersonPinIcon /> }
+          {(cameraItem && !deepfakeDone) &&
+        <CircularProgress color="inherit" size={20}/> }
+    </div>} label="DEEPFAKE" />
         <Tab icon={<GppGoodIcon />} label="PROTECTION" />
       </Tabs>
 
