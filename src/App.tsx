@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import GppGoodIcon from '@mui/icons-material/GppGood';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
+import CircularProgress from '@mui/material/CircularProgress';
 import CameraCapture from './components/CameraCapture'
 import DeepFakeCarousel from "./components/DeepFakeCarousel";
 import {Socket} from "socket.io-client";
@@ -37,7 +38,7 @@ function TabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <Box>{children}</Box>
         </Box>
       )}
     </div>
@@ -88,12 +89,17 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src="http://svalinn.online/wp-content/uploads/2023/03/cropped-Svalinn_logo1-removebg-preview.png" className="App-logo" alt="logo" />
+        <img src="http://svalinn.online/wp-content/uploads/2023/05/logoV2.png" className="App-logo" alt="logo" />
       </header>
 
       <Tabs value={value} onChange={handleChange} variant="fullWidth" aria-label="icon label tabs example">
         <Tab icon={<PhotoCameraIcon />} label="CAPTURE" />
-        <Tab icon={<PersonPinIcon />} label="DEEPFAKE" />
+        <Tab icon={<div>
+          {(!cameraItem || (cameraItem && deepfakeDone)) &&
+        <PersonPinIcon /> }
+          {(cameraItem && !deepfakeDone) &&
+        <CircularProgress color="inherit" size={20}/> }
+    </div>} label="DEEPFAKE" />
         <Tab icon={<GppGoodIcon />} label="PROTECTION" />
       </Tabs>
 

@@ -3,6 +3,8 @@ import io, {Socket} from 'socket.io-client';
 import {RequestType} from "../types/request.type";
 import axios from "axios";
 
+const backend:string = " http://localhost:5001/"//"http://10.186.114.36:5001/"
+
 export function genUniqueId(): string {
     const dateStr = Date
         .now()
@@ -86,7 +88,7 @@ async function file_check(file_name: string, setFunction: any){
     */
     const bucket_name = "svalinn-partnership-demo.appspot.com"
     const gs_url = `https://firebasestorage.googleapis.com/v0/b/${bucket_name}/o`
-    const url =  `${gs_url}/${file_name}`;  
+    const url =  `${gs_url}/${file_name}`;
     console.log(url)
     let messagelist: string[] = [];
 
@@ -112,12 +114,10 @@ async function file_check(file_name: string, setFunction: any){
 };
 
 export function handleBackEndOperation (
-                                          operation:string,
-                                          params:Record<string, string>, 
-                                          imgId:string, 
-                                          socket: Socket<DefaultEventsMap, DefaultEventsMap>, 
+                                          operation:string,params:Record<string, string>,
+                                          imgId:string, socket: Socket<DefaultEventsMap, DefaultEventsMap>,
                                           setCallback: (arg0: any[]) => void,
-                                          setDeepfakeDone: any, 
+                                          setDeepfakeDone: any,
                                           setImmunizationDone: any,
                                         ){
 
@@ -142,18 +142,18 @@ export function handleBackEndOperation (
             const operation ="immunization";
             const params = {"attack_name":"diffusionAttack","file_id":response_JSON["image_id"]};
             handleBackEndOperation(operation, params, response_JSON["image_id"], socket, setCallback, setDeepfakeDone, setImmunizationDone)
-  
+
             // check if immunization succesful
             file_check(response_JSON["image_id"].split(".")[0] + "_imm.png", setImmunizationDone)
           };
         };
-          
+
         // this is here to manually start the immunization with the button in the immunization tab
         if (response_JSON["operation"] == "immunization"){
           file_check(response_JSON["image_id"].split(".")[0] + "_imm.png", setImmunizationDone)
         };
         //setCallback([response_download?.data]);
-  
+
       }
     })
     // console.log(JSON.stringify(newRequest))
@@ -161,3 +161,21 @@ export function handleBackEndOperation (
   }
 
 
+  function postBackEnd(operation:string, params:Record<string, string>, setCallback: (arg0: Promise<any>) => void){
+    fetch(backend+"/request/new", {
+	method: "POST",
+	headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({"operation":operation, "operation_parameters":params})
+    }).then(function(response){
+        console.log(response);
+        setCallback(response.json());
+    })
+  }
+
+  export async function launchDeepFake(file_id:string, setCallback: (arg0: Promise<any>) => void){
+    postBackEnd("deepfake", {"file_id":file_id,"attack_name":"gambling"}, setCallback)
+    await new Promise(r => setTimeout(r, 150*1000));
+    postBackEnd("deepfake", {"file_id":file_id,"attack_name":"arrest"}, setCallback)
+    await new Promise(r => setTimeout(r, 150*1000));
+    postBackEnd("deepfake", {"file_id":file_id,"attack_name":"drug"}, setCallback)
+  }
