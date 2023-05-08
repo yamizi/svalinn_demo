@@ -15,6 +15,7 @@ import {Socket} from "socket.io-client";
 import {handleConnect, handleBackEndOperation} from "./service/utils";
 import {DefaultEventsMap} from "@socket.io/component-emitter";
 import ImmunizedTab from "./components/ImmunizedTab";
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -71,6 +72,17 @@ function App() {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  if (!connected){
+    return (
+      <div className="App">
+      <header className="App-header">
+        <img src="http://svalinn.online/wp-content/uploads/2023/03/cropped-Svalinn_logo1-removebg-preview.png" className="App-logo" alt="logo" />
+      </header>
+        <CircularProgress />
+      </div>
+    )
+  }
 
   return (
     <div className="App">
