@@ -6,12 +6,16 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import {handleBackEndOperation} from "../service/utils";
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
 }
+
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -21,6 +25,17 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+function immunize(cameraItem: any, socket: any, setCallback: any, setDeepfakeDone: any, setImmunizationDone: any){
+  // Get File Name from cameraItem
+  const file_name = cameraItem.split("com/o/")[1].split("?alt=m")[0];
+  console.log(file_name)
+
+  console.log("Immunize")
+  const operation ="immunization";
+  const params = {"attack_name":"diffusionAttack","file_id":file_name};
+
+  handleBackEndOperation(operation, params, file_name, socket, setCallback, setDeepfakeDone, setImmunizationDone)
+};
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -50,7 +65,7 @@ function a11yProps(index: number) {
 }
 
 // @ts-ignore
-export default function ImmunizedTab({cameraItem}) {
+export default function ImmunizedTab({cameraItem, socket, setImmunized, immunizationDone, setDeepfakeDone, setImmunizationDone}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -75,36 +90,56 @@ export default function ImmunizedTab({cameraItem}) {
 
       </Tabs>
       <TabPanel value={value} index={0}>
-       <Stack direction="row" spacing={2}>
-          <Item><img src={cameraItem}/></Item>
-          <Item><img src={cameraItem.replace(".png","_gambling.png")}/></Item>
-        </Stack>
+        <div>
         <Stack direction="row" spacing={2}>
-          <Item><img src={cameraItem.replace(".png","_imm.png")}/></Item>
-          <Item><img src={cameraItem.replace(".png","_imm_gambling.png")}/></Item>
-        </Stack>
+            <Item><img src={cameraItem}/></Item>
+            <Item><img src={cameraItem.replace(".png","_gambling.png")}/></Item>
+          </Stack>
+          <Stack direction="row" spacing={2}>
+            <Item><img src={cameraItem.replace(".png","_imm.png")}/></Item>
+            <Item><img src={cameraItem.replace(".png","_imm_gambling.png")}/></Item>
+          </Stack>
+        </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Stack direction="row" spacing={2}>
-          <Item><img src={cameraItem}/></Item>
-          <Item><img src={cameraItem.replace(".png","_arrest.png")}/></Item>
-        </Stack>
-        <Stack direction="row" spacing={2}>
-          <Item><img src={cameraItem.replace(".png","_imm.png")}/></Item>
-          <Item><img src={cameraItem.replace(".png","_imm_arrest.png")}/></Item>
-        </Stack>
+        <div>
+          <Stack direction="row" spacing={2}>
+            <Item><img src={cameraItem}/></Item>
+            <Item><img src={cameraItem.replace(".png","_arrest.png")}/></Item>
+          </Stack>
+          <Stack direction="row" spacing={2}>
+            <Item><img src={cameraItem.replace(".png","_imm.png")}/></Item>
+            <Item><img src={cameraItem.replace(".png","_imm_arrest.png")}/></Item>
+          </Stack>
+        </div>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Stack direction="row" spacing={2}>
-          <Item><img src={cameraItem}/></Item>
-          <Item><img src={cameraItem.replace(".png","_drug.png")}/></Item>
-        </Stack>
-        <Stack direction="row" spacing={2}>
-          <Item><img src={cameraItem.replace(".png","_imm.png")}/></Item>
-          <Item><img src={cameraItem.replace(".png","_imm_drug.png")}/></Item>
-        </Stack>
+        <div>
+          <Stack direction="row" spacing={2}>
+            <Item><img src={cameraItem}/></Item>
+            <Item><img src={cameraItem.replace(".png","_drug.png")}/></Item>
+          </Stack>
+          <Stack direction="row" spacing={2}>
+            <Item><img src={cameraItem.replace(".png","_imm.png")}/></Item>
+            <Item><img src={cameraItem.replace(".png","_imm_drug.png")}/></Item>
+          </Stack>
+        </div>
       </TabPanel>
-
+      <div>
+        {immunizationDone ? (
+          <p></p>
+        ) : (
+          <Button variant="contained"
+            onClick={(e) => {
+              e.preventDefault()
+              immunize(cameraItem, socket, setImmunized, setDeepfakeDone, setImmunizationDone)
+            }}
+            className="btn btn-danger"
+          >
+            Immunize
+          </Button>
+        )}
+      </div>      
     </Box>
   );
 }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getStorage } from "firebase/storage";
+//import { getStorage } from "firebase/storage";
 
 
 
@@ -67,7 +67,6 @@ async function _file_check(file_name:string) {
   }
 }
 
-
 export function handleDownload(file_name:string, adv_example:boolean=true) {
   /*
   Handles download requests for files from the Google Cloud Storage bucket
@@ -111,3 +110,4 @@ export function handleDownload(file_name:string, adv_example:boolean=true) {
     }
   })();
 };
+
