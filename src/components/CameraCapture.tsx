@@ -8,7 +8,12 @@ import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 
 import {handleUpload} from '../service/firebase'
-import {genUniqueId, urltoFile} from "../service/utils";
+import {genUniqueId, urltoFile, launchDeepFake} from "../service/utils";
+
+import Grid from '@mui/material/Grid';
+import PersonPinIcon from '@mui/icons-material/PersonPin';
+
+import LoadingButton from '@mui/lab/LoadingButton';
 //const WebcamComponent = () => <Webcam />
 const videoConstraints = {
   width: 512,
@@ -16,7 +21,7 @@ const videoConstraints = {
   facingMode: 'user',
 }
 // @ts-ignore
-const CameraCapture = ({setCamera}) => {
+const CameraCapture = ({setCamera, deepfakeDone, goToTab}) => {
   const [picture, setPicture] = useState('');
   const [email, setEmail] = useState('');
   const [formAccept, setFormAccept] = useState(false)
@@ -36,30 +41,13 @@ const CameraCapture = ({setCamera}) => {
       urltoFile(pictureSrc, pictureName,'image/png')
     .then(function(file){ handleUpload(pictureName,file, setCamera);});
 
-    const scale = 7.5
-    const num_steps = 10
-    const seed = 20
-    const prompt = "A man playing football"
-    const immunize = false
-    /*fetch("https://sghamizi-photoguard.hf.space/run/submit", {
-	method: "POST",
-	headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            data: [
-                pictureSrc,
-                prompt,
-                seed,
-                scale,
-                seed,
-                immunize,
-            ]
-        })
-    }).then(function(response){console.log(response); })
-*/
-
+      //launchDeepFake(pictureName,onDeepFakeReady )
       setPicture(pictureSrc)
   }, []);
 
+    const onDeepFakeReady = (data:any) => {
+        console.log("deepfake ready", data)
+    }
 
   return (
     <div>
@@ -72,9 +60,9 @@ const CameraCapture = ({setCamera}) => {
             audio={false}
             height={512}
             ref={webcamRef}
-            width={512}
+            //width={512}
             screenshotFormat="image/png"
-            videoConstraints={videoConstraints}
+            //videoConstraints={videoConstraints}
           />
         ) : (
           <img src={picture} />
@@ -82,6 +70,8 @@ const CameraCapture = ({setCamera}) => {
       </div>
       <div>
         {picture != '' ? (
+          <Grid container justifyContent="center" spacing={2}>
+            <Grid item>
             <Button variant="contained" onClick={(e) => {
               e.preventDefault()
               setPicture('')
@@ -90,6 +80,26 @@ const CameraCapture = ({setCamera}) => {
           >
             Retake
           </Button>
+            </Grid>
+            <Grid item>
+            
+          <LoadingButton
+          color="secondary"
+          // onClick={handleClick}
+          loading={!deepfakeDone}
+          loadingPosition="start"
+          // loadingIndicator="Generating deepfakes"
+          startIcon={<PersonPinIcon />}
+          variant="contained"
+          onClick={(e) => {
+            e.preventDefault()
+            goToTab(1)
+          }}
+        >
+          <span>See deepfakes</span>
+        </LoadingButton>
+          </Grid>
+          </Grid>
         ) : (
 
             <FormGroup>

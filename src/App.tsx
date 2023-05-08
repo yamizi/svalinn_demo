@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import GppGoodIcon from '@mui/icons-material/GppGood';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
+import CircularProgress from '@mui/material/CircularProgress';
 import CameraCapture from './components/CameraCapture'
 import DeepFakeCarousel from "./components/DeepFakeCarousel";
 import {Socket} from "socket.io-client";
@@ -36,7 +37,7 @@ function TabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <Box>{children}</Box>
         </Box>
       )}
     </div>
@@ -55,37 +56,56 @@ function App() {
   const [immunized, setImmunized] = React.useState([]); // TODO: Smae here 
   const [immunizationDone, setImmunizationDone] = React.useState(false);
   const [deepfakeDone, setDeepfakeDone] = React.useState(false);
+  const [serverConnections, setServerConnections ] = React.useState<number>(0);
 
-  if (!connected){
-      handleConnect(setServerMessage, setConnected, setSocket);
+  if (serverConnections<1){
+     setServerConnections(serverConnections+1)
+     handleConnect(setServerMessage, setConnected, setSocket);
   }
 
   const setCamera = (event: React.SyntheticEvent, urlValue: string, filename: string) => {
+    setDeepfakeDone(false);
     setCameraItem("https://firebasestorage.googleapis.com/v0/b/svalinn-partnership-demo.appspot.com/o/"+urlValue+"?alt=media");
     const operation ="deepfake";
     const params = {"attack_name":"stable_diffusion_inpainting","file_id":urlValue};
     // @ts-ignore
-      handleBackEndOperation(operation, params, urlValue, socket, setDeepfake, setDeepfakeDone, setImmunizationDone)
+    handleBackEndOperation(operation, params, urlValue, socket, setDeepfake, setDeepfakeDone, setImmunizationDone)
   };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
+  if (!connected){
+    return (
+      <div className="App">
+      <header className="App-header">
+        <img src="http://svalinn.online/wp-content/uploads/2023/03/cropped-Svalinn_logo1-removebg-preview.png" className="App-logo" alt="logo" />
+      </header>
+        <CircularProgress />
+      </div>
+    )
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src="http://svalinn.online/wp-content/uploads/2023/03/cropped-Svalinn_logo1-removebg-preview.png" className="App-logo" alt="logo" />
+        <img src="http://svalinn.online/wp-content/uploads/2023/05/logoV2.png" className="App-logo" alt="logo" />
       </header>
 
       <Tabs value={value} onChange={handleChange} variant="fullWidth" aria-label="icon label tabs example">
         <Tab icon={<PhotoCameraIcon />} label="CAPTURE" />
-        <Tab icon={<PersonPinIcon />} label="DEEPFAKE" />
+        <Tab icon={<div>
+          {(!cameraItem || (cameraItem && deepfakeDone)) &&
+        <PersonPinIcon /> }
+          {(cameraItem && !deepfakeDone) &&
+        <CircularProgress color="inherit" size={20}/> }
+    </div>} label="DEEPFAKE" />
         <Tab icon={<GppGoodIcon />} label="PROTECTION" />
       </Tabs>
 
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <CameraCapture setCamera={setCamera}/>
+          <CameraCapture setCamera={setCamera} deepfakeDone={deepfakeDone} goToTab={setValue}/>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
             <div
