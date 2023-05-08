@@ -9,6 +9,11 @@ import TextField from '@mui/material/TextField';
 
 import {handleUpload} from '../service/firebase'
 import {genUniqueId, urltoFile} from "../service/utils";
+
+import Grid from '@mui/material/Grid';
+import PersonPinIcon from '@mui/icons-material/PersonPin';
+
+import LoadingButton from '@mui/lab/LoadingButton';
 //const WebcamComponent = () => <Webcam />
 const videoConstraints = {
   width: 512,
@@ -16,7 +21,7 @@ const videoConstraints = {
   facingMode: 'user',
 }
 // @ts-ignore
-const CameraCapture = ({setCamera}) => {
+const CameraCapture = ({setCamera, deepfakeDone, goToTab}) => {
   const [picture, setPicture] = useState('');
   const [email, setEmail] = useState('');
   const [formAccept, setFormAccept] = useState(false)
@@ -82,6 +87,8 @@ const CameraCapture = ({setCamera}) => {
       </div>
       <div>
         {picture != '' ? (
+          <Grid container justifyContent="center" spacing={2}>
+            <Grid item>
             <Button variant="contained" onClick={(e) => {
               e.preventDefault()
               setPicture('')
@@ -90,6 +97,26 @@ const CameraCapture = ({setCamera}) => {
           >
             Retake
           </Button>
+            </Grid>
+            <Grid item>
+            
+          <LoadingButton
+          color="secondary"
+          // onClick={handleClick}
+          loading={!deepfakeDone}
+          loadingPosition="start"
+          // loadingIndicator="Generating deepfakes"
+          startIcon={<PersonPinIcon />}
+          variant="contained"
+          onClick={(e) => {
+            e.preventDefault()
+            goToTab(1)
+          }}
+        >
+          <span>See deepfakes</span>
+        </LoadingButton>
+          </Grid>
+          </Grid>
         ) : (
 
             <FormGroup>

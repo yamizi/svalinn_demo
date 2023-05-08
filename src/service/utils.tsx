@@ -102,7 +102,7 @@ async function file_check(file_name: string, setFunction: any){
     axios.get(url).then((response) => {
       console.log(`Response stauts ${response.status}`)
       if (response.status == 200){
-        alert(messagelist[0]);
+        console.log(messagelist[0]);
         setFunction(true)
       } else {
         alert(messagelist[1])
@@ -112,8 +112,10 @@ async function file_check(file_name: string, setFunction: any){
 };
 
 export function handleBackEndOperation (
-                                          operation:string,params:Record<string, string>, 
-                                          imgId:string, socket: Socket<DefaultEventsMap, DefaultEventsMap>, 
+                                          operation:string,
+                                          params:Record<string, string>, 
+                                          imgId:string, 
+                                          socket: Socket<DefaultEventsMap, DefaultEventsMap>, 
                                           setCallback: (arg0: any[]) => void,
                                           setDeepfakeDone: any, 
                                           setImmunizationDone: any,

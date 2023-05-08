@@ -62,11 +62,12 @@ function App() {
   }
 
   const setCamera = (event: React.SyntheticEvent, urlValue: string, filename: string) => {
+    setDeepfakeDone(false);
     setCameraItem("https://firebasestorage.googleapis.com/v0/b/svalinn-partnership-demo.appspot.com/o/"+urlValue+"?alt=media");
     const operation ="deepfake";
     const params = {"attack_name":"stable_diffusion_inpainting","file_id":urlValue};
     // @ts-ignore
-      handleBackEndOperation(operation, params, urlValue, socket, setDeepfake, setDeepfakeDone, setImmunizationDone)
+    handleBackEndOperation(operation, params, urlValue, socket, setDeepfake, setDeepfakeDone, setImmunizationDone)
   };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -97,7 +98,7 @@ function App() {
       </Tabs>
 
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <CameraCapture setCamera={setCamera}/>
+          <CameraCapture setCamera={setCamera} deepfakeDone={deepfakeDone} goToTab={setValue}/>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
             <div
