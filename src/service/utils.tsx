@@ -3,7 +3,7 @@ import io, {Socket} from 'socket.io-client';
 import {RequestType} from "../types/request.type";
 import axios from "axios";
 
-const backend:string = " http://localhost:5001/"//"http://10.186.114.36:5001/"
+const backend:string = " http://localhost:5002/"//"http://10.186.114.36:5001/"
 
 export function genUniqueId(): string {
     const dateStr = Date
@@ -34,7 +34,7 @@ export function handleConnect (setServerMessage: (arg0: string) => void, setConn
     Establishes connection with the Backend & contains client endpoints
     */
 
-    const serverUrl= "http://10.186.114.36:5005"
+    const serverUrl= "http://10.186.114.23:5002"
     const _socket = io(serverUrl);
 
     _socket.on("connect_error", (err) => {
@@ -133,9 +133,10 @@ export function handleBackEndOperation (
         const response_JSON = JSON.parse(response);
         //console.log(`Front: Request ${JSON.stringify(newRequest)} ${result}`)
         if (response_JSON.operation == "deepfake") {
+          console.log(response_JSON)
 
           //check if deepfake generation succesful
-          file_check(response_JSON["image_id"].split(".")[0] + "_drug.png", setDeepfakeDone)
+          file_check(response_JSON["image_id"].rsplit(".", 1)[0] + "_drug.png", setDeepfakeDone)
 
           // TODO: Immediately start immunization
           if (false) {
@@ -144,13 +145,13 @@ export function handleBackEndOperation (
             handleBackEndOperation(operation, params, response_JSON["image_id"], socket, setCallback, setDeepfakeDone, setImmunizationDone)
 
             // check if immunization succesful
-            file_check(response_JSON["image_id"].split(".")[0] + "_imm.png", setImmunizationDone)
+            file_check(response_JSON["image_id"].rsplit(".",1)[0] + "_imm.png", setImmunizationDone)
           };
         };
 
         // this is here to manually start the immunization with the button in the immunization tab
         if (response_JSON["operation"] == "immunization"){
-          file_check(response_JSON["image_id"].split(".")[0] + "_imm.png", setImmunizationDone)
+          file_check(response_JSON["image_id"].rsplit(".",1)[0] + "_imm.png", setImmunizationDone)
         };
         //setCallback([response_download?.data]);
 

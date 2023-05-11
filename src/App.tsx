@@ -80,7 +80,7 @@ function App() {
     return (
       <div className="App">
       <header className="App-header">
-        <img src="http://svalinn.online/wp-content/uploads/2023/03/cropped-Svalinn_logo1-removebg-preview.png" className="App-logo" alt="logo" />
+        <img src="http://svalinn.online/wp-content/uploads/2023/05/logoV2.png" className="App-logo" alt="logo" />
       </header>
         <CircularProgress />
       </div>

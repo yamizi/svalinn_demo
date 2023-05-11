@@ -104,7 +104,7 @@ const CameraCapture = ({setCamera, deepfakeDone, goToTab}) => {
 
             <FormGroup>
 
-              <FormControlLabel required control={<Checkbox checked={formAccept} onChange={handleCheckboxChange} />} label="I agree to the Data Processing Policy" />
+<FormControlLabel required control={<Checkbox checked={formAccept} onChange={handleCheckboxChange} />} label={<label>I agree to <a href='https://svalinn.online/snt-partnership-day-data-processing-policy/'>Data Processing Policy</a></label>} />
                 <TextField id="standard-basic" label="Email" value={email}
   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -116,7 +116,8 @@ const CameraCapture = ({setCamera, deepfakeDone, goToTab}) => {
                       capture(email)
                     }}
                     className="btn btn-danger"
-                        disabled={!formAccept || email.length<5}
+                        // disabled={!formAccept || email.length<5}
+                        disabled={!formAccept ||  !(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email))}
                   >
                     Capture
                   </Button>
