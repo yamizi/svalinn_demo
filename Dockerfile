@@ -10,6 +10,8 @@ RUN npm install --force
 
 COPY ./ /app/
 
+RUN ./scripts/pre-build.sh
+
 RUN npm run build
 
 FROM nginx:latest
@@ -21,5 +23,6 @@ RUN rm -rf ./*
 COPY --from=builder /app/build/ .
 
 COPY /nginx.conf /etc/nginx/conf.d/default.conf
-COPY /nginx-selfsigned.crt /etc/nginx/ssl/selfsigned.crt
-COPY /nginx-selfsigned.key /etc/nginx/ssl/selfsigned.key
+COPY ./scripts/docker-start.sh /docker-start.sh
+
+CMD ["sh", "/docker-start.sh"]
