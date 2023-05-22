@@ -84,20 +84,20 @@ export default function ImmunizedTab({cameraItem, socket, setImmunized, immuniza
         aria-label="Vertical tabs example"
         sx={{ borderRight: 2, borderColor: 'divider' }}
       >
-        <Tab label="You are addicted to gambling!" {...a11yProps(0)} />
+        <Tab label="You are drug trafficking!" {...a11yProps(0)} />
         <Tab label="You have been arrested!" {...a11yProps(1)} />
-        <Tab label="You are drug trafficking!" {...a11yProps(2)} />
+        <Tab label="You have been sent to prison!" {...a11yProps(2)} />
 
       </Tabs>
       <TabPanel value={value} index={0}>
         <div>
-        <Stack direction="row" spacing={2}>
+          <Stack direction="row" spacing={2}>
             <Item><img src={cameraItem}/></Item>
-            <Item><img src={cameraItem.replace(".png","_gambling.png")}/></Item>
+            <Item><img src={cameraItem.replace(".png","_drug.png")}/></Item>
           </Stack>
           <Stack direction="row" spacing={2}>
             <Item><img src={cameraItem.replace(".png","_imm.png")}/></Item>
-            <Item><img src={cameraItem.replace(".png","_imm_gambling.png")}/></Item>
+            <Item><img src={cameraItem.replace(".png","_imm_drug.png")}/></Item>
           </Stack>
         </div>
       </TabPanel>
@@ -115,13 +115,13 @@ export default function ImmunizedTab({cameraItem, socket, setImmunized, immuniza
       </TabPanel>
       <TabPanel value={value} index={2}>
         <div>
-          <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={2}>
             <Item><img src={cameraItem}/></Item>
-            <Item><img src={cameraItem.replace(".png","_drug.png")}/></Item>
+            <Item><img src={cameraItem.replace(".png","_gambling.png")}/></Item>
           </Stack>
           <Stack direction="row" spacing={2}>
             <Item><img src={cameraItem.replace(".png","_imm.png")}/></Item>
-            <Item><img src={cameraItem.replace(".png","_imm_drug.png")}/></Item>
+            <Item><img src={cameraItem.replace(".png","_imm_gambling.png")}/></Item>
           </Stack>
         </div>
       </TabPanel>
