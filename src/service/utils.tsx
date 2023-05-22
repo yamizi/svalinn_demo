@@ -3,7 +3,7 @@ import io, {Socket} from 'socket.io-client';
 import {RequestType} from "../types/request.type";
 import axios from "axios";
 
-const backend:string = " http://localhost:5002/"//"http://10.186.114.36:5001/"
+const backend:string = " https://localhost:5010/"//"http://10.186.114.36:5001/"
 
 export function genUniqueId(): string {
     const dateStr = Date
@@ -34,7 +34,7 @@ export function handleConnect (setServerMessage: (arg0: string) => void, setConn
     Establishes connection with the Backend & contains client endpoints
     */
 
-    const serverUrl= "http://10.186.114.23:5002"
+    const serverUrl = backend;
     const _socket = io(serverUrl);
 
     _socket.on("connect_error", (err) => {
@@ -114,8 +114,10 @@ async function file_check(file_name: string, setFunction: any){
 };
 
 export function handleBackEndOperation (
-                                          operation:string,params:Record<string, string>,
-                                          imgId:string, socket: Socket<DefaultEventsMap, DefaultEventsMap>,
+                                          operation:string,
+                                          params:Record<string, string>,
+                                          imgId:string,
+                                          socket: Socket<DefaultEventsMap, DefaultEventsMap>,
                                           setCallback: (arg0: any[]) => void,
                                           setDeepfakeDone: any,
                                           setImmunizationDone: any,
@@ -136,7 +138,9 @@ export function handleBackEndOperation (
           console.log(response_JSON)
 
           //check if deepfake generation succesful
-          file_check(response_JSON["image_id"].rsplit(".", 1)[0] + "_drug.png", setDeepfakeDone)
+          const file_url_new = response_JSON["image_id"].split('.').slice(0, -1).join('.') + "_drug.png"
+          file_check(file_url_new, setDeepfakeDone)
+          // file_check(response_JSON["image_id"].rsplit(".", 1)[0] + "_drug.png", setDeepfakeDone)
 
           // TODO: Immediately start immunization
           if (false) {
@@ -150,8 +154,10 @@ export function handleBackEndOperation (
         };
 
         // this is here to manually start the immunization with the button in the immunization tab
+        
         if (response_JSON["operation"] == "immunization"){
-          file_check(response_JSON["image_id"].rsplit(".",1)[0] + "_imm.png", setImmunizationDone)
+          const file_url_new = response_JSON["image_id"].split('.').slice(0, -1).join('.') + "_imm.png"
+          file_check(file_url_new, setImmunizationDone)
         };
         //setCallback([response_download?.data]);
 
