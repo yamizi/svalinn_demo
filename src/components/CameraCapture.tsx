@@ -117,7 +117,7 @@ const CameraCapture = ({setCamera, deepfakeDone, goToTab}) => {
                     }}
                     className="btn btn-danger"
                         // disabled={!formAccept || email.length<5}
-                        disabled={!formAccept ||  !(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email))}
+                        disabled={!formAccept ||  !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))}
                   >
                     Capture
                   </Button>
