@@ -3,7 +3,8 @@ import io, {Socket} from 'socket.io-client';
 import {RequestType} from "../types/request.type";
 import axios from "axios";
 
-const backend:string = " https://localhost:5010/"//"http://10.186.114.36:5001/"
+//const backend:string = " https://localhost:5000/"//"http://10.186.114.36:5001/"
+const backend:string = "http://10.186.115.12:5000"
 
 export function genUniqueId(): string {
     const dateStr = Date
@@ -57,8 +58,8 @@ export function handleConnect (setServerMessage: (arg0: string) => void, setConn
     });
 
     _socket.on("requestReceived", () => {
-      console.log("Front: Request received");
-      setServerMessage("Front: Request received");
+      console.log("Front: Request received by Backend");
+      setServerMessage("Front: Request received by Backend");
     });
 
     _socket.on("error_request", (err) => {
@@ -126,6 +127,7 @@ export function handleBackEndOperation (
     const newRequest:RequestType = {} as RequestType
 
     newRequest.operation_parameters = params
+    console.log(params)
     newRequest.operation= operation
     // these are never used in the backend, there we only use file_id which is in the parameters
     newRequest.image_id=imgId   //Need this so that different requests are different from each other, otherwise useless
@@ -141,16 +143,6 @@ export function handleBackEndOperation (
           const file_url_new = response_JSON["image_id"].split('.').slice(0, -1).join('.') + "_drug.png"
           file_check(file_url_new, setDeepfakeDone)
           // file_check(response_JSON["image_id"].rsplit(".", 1)[0] + "_drug.png", setDeepfakeDone)
-
-          // TODO: Immediately start immunization
-          if (false) {
-            const operation ="immunization";
-            const params = {"attack_name":"diffusionAttack","file_id":response_JSON["image_id"]};
-            handleBackEndOperation(operation, params, response_JSON["image_id"], socket, setCallback, setDeepfakeDone, setImmunizationDone)
-
-            // check if immunization succesful
-            file_check(response_JSON["image_id"].rsplit(".",1)[0] + "_imm.png", setImmunizationDone)
-          };
         };
 
         // this is here to manually start the immunization with the button in the immunization tab

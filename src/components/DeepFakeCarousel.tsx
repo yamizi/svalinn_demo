@@ -9,33 +9,47 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 
 // @ts-ignore
-export default function DeepFakeCarousel({cameraItem}) {
-
-  const steps = [
-    {
-      label: 'This is the original image',
-      description:
-        cameraItem,
-    },
-    {
-      label: 'You are drug trafficking!',
-      description: cameraItem.replace(".png","_drug.png"),
-    },
-    {
-      label: 'You have been arrested!',
-      description: cameraItem.replace(".png","_arrest.png"),
-    },
+export default function DeepFakeCarousel({cameraItem, customDeepfake, deepfakeDone}) {
+  let steps;
+  if (customDeepfake===false){
+    steps = [
       {
-      label: 'You have been sent to prison!',
-      description:
-        cameraItem.replace(".png","_gambling.png"),
-    },
-   /*{
-      label: 'You have been seen at the Red District in Amsterdam!',
-      description:
-        'https://firebasestorage.googleapis.com/v0/b/svalinn-partnership-demo.appspot.com/o/photo_adv_seed13.png?alt=media&token=c986c877-c6f1-4a0f-8976-b1b413a29416',
-    },*/
-  ];
+        label: 'This is the original image',
+        description:
+          cameraItem,
+      },
+      {
+        label: 'You are drug trafficking!',
+        description: cameraItem.replace(".png","_drug.png"),
+      },
+      {
+        label: 'You have been arrested!',
+        description: cameraItem.replace(".png","_arrest.png"),
+      },
+      {
+        label: 'You have been sent to prison!',
+        description:
+          cameraItem.replace(".png","_gambling.png"),
+      },
+    /*{
+        label: 'You have been seen at the Red District in Amsterdam!',
+        description:
+          'https://firebasestorage.googleapis.com/v0/b/svalinn-partnership-demo.appspot.com/o/photo_adv_seed13.png?alt=media&token=c986c877-c6f1-4a0f-8976-b1b413a29416',
+      },*/
+    ];
+  } else {
+    steps = [
+      {
+        label: 'This is the original image',
+        description:
+          cameraItem,
+      },
+      {
+        label: 'This is the generated image with custom prompt',
+        description: cameraItem.replace(".png","_customPrompt.png"),
+      }
+    ];
+  }
 
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -65,10 +79,11 @@ export default function DeepFakeCarousel({cameraItem}) {
       >
         <Typography>{steps[activeStep].label}</Typography>
       </Paper>
-      <Box sx={{ height: 512, maxWidth: 512, width: '100%', p: 2 }}>
-          <img src={steps[activeStep].description}/>
 
+      <Box sx={{ height: 512, maxWidth: 512, width: '100%', p: 2 }}>
+        <img src={steps[activeStep].description}/>
       </Box>
+
       <MobileStepper
         variant="text"
         steps={maxSteps}
